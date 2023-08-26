@@ -1,6 +1,6 @@
 langchain
 openai
 pypdf
-chromadb==0.3.29
+chromadb
 tiktoken
-streamlit-extras
+pysqlite3-binary

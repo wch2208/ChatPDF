@@ -1,8 +1,3 @@
-# sqlite버전 오류 해결
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
@@ -13,13 +8,20 @@ from langchain.chat_models import ChatOpenAI
 import streamlit as st
 import tempfile
 import os
+from streamlit_extras.buy_me_a_coffee import button
+
+button(username="fake-username", floating=True, width=221)
 
 # 제목
 st.title("ChatPDF")
 st.write("---")
 
+#OpenAI KEY 입력 받기
+openai_key = st.text_input('OPEN_AI_API_KEY', type="password")
+
+
 # 파일 업로드
-uploaded_file = st.file_uploader("Choose a file")
+uploaded_file = st.file_uploader("PDF 파일을 올려주세요", type=["pdf"])
 st.write("---")
 
 def pdf_to_document(uploaded_file):
@@ -46,7 +48,7 @@ if uploaded_file is not None:
     texts = text_splitter.split_documents(pages)
 
     # 임베딩 기능 : 데이터구조 전환하는 것
-    embeddings_model = OpenAIEmbeddings()
+    embeddings_model = OpenAIEmbeddings(openai_api_key=openai_key)
 
     # 데이터베이스 (백터DB)
     # load it into Chroma
@@ -59,7 +61,7 @@ if uploaded_file is not None:
     # 버튼을 누르면 질문 전달
     if st.button('질문하기'):
         with st.spinner('Wait for it...'):
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=openai_key)
             qa_chain = RetrievalQA.from_chain_type(llm,retriever=db.as_retriever())
             result = qa_chain({"query": question})
             st.write(result["result"])

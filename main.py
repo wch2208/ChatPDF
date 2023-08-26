@@ -10,7 +10,7 @@ import tempfile
 import os
 from streamlit_extras.buy_me_a_coffee import button
 
-button(username="fake-username", floating=True, width=221)
+button(username="chanhee", floating=True, width=221)
 
 # 제목
 st.title("ChatPDF")

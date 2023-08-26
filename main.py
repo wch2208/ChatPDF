@@ -18,7 +18,7 @@ st.title("ChatPDF")
 st.write("---")
 
 #OpenAI KEY 입력 받기
-openai_key = st.text_input('OPEN_AI_API_KEY', type="password")
+# openai_key = st.text_input('OPENAI_API_KEY', type="password")
 
 
 # 파일 업로드
@@ -49,7 +49,7 @@ if uploaded_file is not None:
     texts = text_splitter.split_documents(pages)
 
     # 임베딩 기능 : 데이터구조 전환하는 것
-    embeddings_model = OpenAIEmbeddings(openai_api_key=openai_key)
+    embeddings_model = OpenAIEmbeddings()
 
     # 데이터베이스 (백터DB)
     # load it into Chroma
@@ -62,7 +62,7 @@ if uploaded_file is not None:
     # 버튼을 누르면 질문 전달
     if st.button('질문하기'):
         with st.spinner('Wait for it...'):
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=openai_key)
+            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
             qa_chain = RetrievalQA.from_chain_type(llm,retriever=db.as_retriever())
             result = qa_chain({"query": question})
             st.write(result["result"])

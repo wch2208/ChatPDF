@@ -58,7 +58,7 @@ if uploaded_file is not None:
     # 버튼을 누르면 질문 전달
     if st.button('질문하기'):
         with st.spinner('Wait for it...'):
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=1)
             qa_chain = RetrievalQA.from_chain_type(llm,retriever=db.as_retriever())
             result = qa_chain({"query": question})
             st.write(result["result"])
